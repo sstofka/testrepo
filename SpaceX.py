@@ -13,7 +13,7 @@ from dash.dependencies import Input, Output, State
 import plotly.express as px
 import plotly.graph_objects as go
 
-strDir = "c:\\LocalDirectory\\"
+strDir = "C:\\Users\\steve\\Google Drive\\Education\\Python3Coursera\\Capstone\\"
 strFile = "spacex_launch_dash.csv"
 strPath = strDir + strFile
 #When running online use just strFile
@@ -66,17 +66,21 @@ def getDropdownList(df):
     arOptions.extend(arSiteList)
     return arOptions
 
-# Create an app layout
-styleDropdown = {'width' : '40%', 'padding': '3px', 'font-size': '20px', 'text-align-last': 'center'}
-styleH1 = {'textAlign': 'center', 'color': '#503D36','font-size': 40}
+# Create an app layout. Avoid code clutter within the html layout
 strPlaceholder = 'Select a Launch Site here'
+styleDropdown = {'width' : '50%', 'padding': '10px', 'font-size': '20px', 'justify_content': 'center'}
+styleH1 = {'textAlign': 'center', 'color': '#503D36','font-size': 40}
+styleOuter = {'border': '0.05em solid blue', 'width':'80%',  'display': 'flex', 'justify-content': 'center'}
+styleSlider = {'width':'80%', 'padding': '10px', 'display': 'flex',\
+   'align-items': 'center','justify-content': 'center'}
              
 app.layout = html.Div(
     children=[
         html.H1('SpaceX Launch Records Dashboard', style= styleH1), #End H1 element
               # TASK 1: Add a dropdown list to enable Launch Site selection
               # The default select value is for ALL sites
-              dcc.Dropdown(id='site-dropdown',
+              html.Div(id="Outer", style = styleOuter,
+              children = [dcc.Dropdown(id='site-dropdown',
                            options= getDropdownList(spacex_df),
                            placeholder = strPlaceholder,
                            #searchable = True,
@@ -88,16 +92,24 @@ app.layout = html.Div(
               # If a specific launch site was selected, show the Success vs. Failed counts for the site 
               #can't get this to show    
               html.Div(html.Div([], id='success_pie_chart')),             
-              html.Br(),
+              html.Br(),]
+              ), #End of outer div
+              html.Div(id="Outer", style = styleSlider,
+                       children = 
+                       [html.P("Payload range (Kg):", style = styleH1),
+                        html.Br()]), #end children of introduction to slider and outer div
 
-              html.P("Payload range (Kg):"),
-              # TASK 3: Add a slider to select payload range
-              dcc.RangeSlider(0, 10000, 1000, value= payload_range, id='payload-slider'),
-              
-              # TASK 4: Add a scatter chart to show the correlation between payload and launch success
-              html.Div(html.Div([], id='success-payload-scatter-chart')),
+                        # TASK 3: Add a slider to select payload range
+                        dcc.RangeSlider(0, 10000, 1000, value= payload_range, id='payload-slider'),
+                        #end slider                
+                        
+                        #Task 4: Add a scatter chart to show the correlation between payload and launch success
+                        html.Div(id="Outer", style = styleSlider,
+                                 children=
+                                 [html.Div([], id='success-payload-scatter-chart') #end of blank Div for callback
+                                  ]) #end of children and outer div for chart 
              
-              ]) #end children and main div
+              ]) #end children of main div
 
 
 # TASK 2:
